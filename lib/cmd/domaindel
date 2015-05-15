@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ "${PATHINFO}" != "yes" ];
+then
+	echo "Could not find required path information"
+	exit 1
+fi
+
+#####################
+# Starting the work #
+#####################
+
+rm -rf ${ADMINTOOLS_HOME}/db/${INFO_USER}/${INFO_BASE}
+domains=`ls -1 ${ADMINTOOLS_HOME}/db/${INFO_USER} | wc -l`
+if [ $domains -eq 0 ];
+then
+	rm -rf ${ADMINTOOLS_HOME}/db/${INFO_USER}
+fi
+
+${ADMINTOOLS} domaindel-dns
+${ADMINTOOLS} domaindel-host
+${ADMINTOOLS} domaindel-dir
+
+echo " + Done."

@@ -1,0 +1,8 @@
+Usage: sysadmin domainadd {user} {domain}
+
+This command will help you create a domain and set it up for immediate use.
+
+The way this command works is that it will first create a working directory under /home/{user}/sites/{domain} and place everything there.
+It will then create various DNS records and set up your BIND9 service so that DNS lookups for your domain will resolve to this server properly.
+After that, it will create an Apache2 virtual host and then restart Apache.
+At this point, your domain is all ready for use and you can start putting your content online.

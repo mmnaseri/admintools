@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "Here is a list of commands available to you:"
+cmd=`ls -1 ${ADMINTOOLS_HOME}/cmd | sort`
+for item in $cmd
+do
+	if [ -x ${ADMINTOOLS_HOME}/cmd/${item} ];
+	then
+		echo -e "\t${item}"
+	fi
+done

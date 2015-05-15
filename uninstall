@@ -1,0 +1,5 @@
+#!/bin/bash
+
+rm -rf /sbin/sysadmin
+rm -rf /etc/profile.d/admintools.sh
+rm -rf $ADMINTOOLS_HOME

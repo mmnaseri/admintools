@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Check that only one argument is passed
+if [ ${#*} -eq 0 ];
+then
+	echo "I cannot help you if I don't know what you want"
+	exit 1
+fi
+
+if [ ${#*} -ne 1 ];
+then
+	echo "Ask help for one thing at a time!"
+	exit 2
+fi
+
+doc="${ADMINTOOLS_HOME}/help/${1}"
+
+if [ ! -f $doc ];
+then
+	echo "No help is available for \"${1}\""
+	exit 3
+fi
+
+cat $doc
+

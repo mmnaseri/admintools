@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ "${PATHINFO}" != "yes" ];
+then
+	echo "Could not find required path information"
+	exit 1
+fi
+
+# Removing user files
+if [ "${INFO_OPTIONS/d}" != "${INFO_OPTIONS}" ];
+then
+        echo " + Removing base directory ${INFO_SITEROOT}"
+        rm -rf $INFO_SITEROOT
+else
+	echo " + Removing configuration files for DNS and Apache2 virtual host"
+        rm -rf $INFO_SITEROOT/dns
+        rm -rf $INFO_SITEROOT/host
+fi
+

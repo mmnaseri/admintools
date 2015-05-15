@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ "${PATHINFO}" != "yes" ];
+then
+	echo "Could not find required path information"
+	exit 1
+fi
+
+#####################
+# Starting the work #
+#####################
+
+mkdir -p ${ADMINTOOLS_HOME}/db/${INFO_USER}
+touch ${ADMINTOOLS_HOME}/db/${INFO_USER}/${INFO_BASE}
+
+${ADMINTOOLS} domainadd-dir
+${ADMINTOOLS} domainadd-dns
+${ADMINTOOLS} domainadd-host
+echo " + Done."

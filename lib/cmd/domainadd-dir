@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [ "${PATHINFO}" != "yes" ];
+then
+        echo "Could not find required path information"
+        exit 1
+fi
+
+echo " + Setting up the directory structure"
+
+# Removing all previous files
+rm -rf ${INFO_SITEROOT}
+
+# Creating document root
+mkdir -p ${INFO_SITEROOT}/public_html
+# Creating DNS configuration folder
+mkdir -p ${INFO_SITEROOT}/dns
+# Creating Apache host configuration folder
+mkdir -p ${INFO_SITEROOT}/host
+
+# Creating a default welcome page
+
+if [ ! -f ${INFO_SITEROOT}/public_html/index.html ];
+then
+        echo "    - Creating a default welcome page"
+        cat ${ADMINTOOLS_HOME}/template/public_html/index.html | ${ADMINTOOLS_HOME}/process-template site ${INFO_BASE} > ${INFO_SITEROOT}/public_html/index.html
+fi

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+path="$1"
+if [ -z "$path" ];
+then
+	path="/lib/"
+fi
+# Setting the path
+path="${path}/admintools"
+path=`echo ${path} | tr '//' '/'`
+
+echo " + Creating directory ${path}"
+mkdir -p $path
+
+# Creating profile for the admin tools environment
+echo " + Setting up the environment"
+echo "export ADMINTOOLS_HOME='${path}'" > /etc/profile.d/admintools.sh
+chmod +x /etc/profile.d/admintools.sh
+
+# Copying files
+echo " + Copying files"
+cp -R lib/* $path/
+
+# Creating symbolic link to the executable
+echo " + Setting up executable links"
+ln -s $path/bin/sysadmin /sbin/sysadmin
+
+echo " + Done"

@@ -1,0 +1,5 @@
+Usage: sysadmin domaindel [{options}] {user} {domain}
+
+This command will remove all DNS and Apache2 related configuration created by `domainadd` from your system.
+Optionally, you can specify the `-d` option to instruct the command to also remove all user files from your system. This will
+effectively remove the `/home/{user}/sites/{domain}` directory from the system.

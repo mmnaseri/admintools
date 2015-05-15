@@ -1,0 +1,19 @@
+#!/bin/bash
+
+users=`ls -1 ${ADMINTOOLS_HOME}/db | sort`
+for user in $users
+do
+	if [ -d ${ADMINTOOLS_HOME}/db/${user} ];
+	then
+		echo "[${user}]"
+		sites=`ls -1 ${ADMINTOOLS_HOME}/db/${user}/ | sort`
+		for site in $sites
+		do
+			if [ -f ${ADMINTOOLS_HOME}/db/${user}/${site} ];
+			then
+				echo "${site}"
+			fi
+		done
+		echo ""
+	fi
+done

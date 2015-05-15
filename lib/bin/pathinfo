@@ -1,0 +1,83 @@
+#!/bin/bash
+
+options=""
+if [ ${#*} -gt 2 ];
+then
+	options="$1"
+	if [ "${options[@]:0:1}" != "-" ];
+	then
+		echo "Options must start with a '-'"
+		exit 1
+	fi
+	options="${options[@]:1}"
+	if [ ${#options[@]} -eq 0 ];
+	then
+		echo "You must specify some option following the '-'"
+		exit 2
+	fi
+	if [ ${options/-} != ${options} ];
+	then
+		echo "You cannot specify '-' as an option"
+		exit 3
+	fi
+fi
+if [ ! -z "$options" ];
+then
+	user="$2"
+	site="$3"
+else
+	user="$1"
+	site="$2"
+fi
+if [ -z "${user}" ];
+then
+	echo "You must specify a user"
+	exit 4
+fi
+if [ -z "${site}" ];
+then
+	echo "You must specify a site"
+	exit 5
+fi
+site=`echo "${site}" | tr '[:upper:]' '[:lower:]'`
+info=`cat /etc/passwd | grep "${user}:" | tr ':' ','`
+IFS=','; read -ra info <<< "${info[@]}"
+home=${info[5]}
+unset info
+base="${site}"
+
+# If site name is prefixed with WWW we will remove that in the base name
+
+if [[ "${site}" =~ ^www\..* ]];
+then
+	base=`echo "${site}" | cut -c5-`
+fi
+
+# Let's figure out if the site name has a prefix
+
+prefix=`grep -o "\." <<< "${site}" | wc -l`
+if [[ $prefix -gt 1 ]];
+then
+        prefix="yes"
+else
+        prefix="no"
+fi
+
+# Setting up the home folder and document root
+ip4=$(ifconfig eth0 | grep 'inet addr' | egrep -o '[0-9]+(\.[0-9]+)+' | head -n 1)
+ip6=$(ifconfig eth0 | grep 'inet6 addr' | grep -i global | egrep -o '[0-9a-f]+(:+[0-9a-f]+)+')
+
+if [ "$prefix" == "yes" ];
+then
+	siteroot="${home}/sites/${base}"
+else
+	siteroot="${home}/sites/www.${base}"
+fi
+echo "INFO_USER=$user"
+echo "INFO_SITE=$site"
+echo "INFO_BASE=$base"
+echo "INFO_SITEROOT=$siteroot"
+echo "INFO_HOME=$home"
+echo "INFO_OPTIONS=$options"
+echo "INFO_IP4=$ip4"
+echo "INFO_IP6=$ip6"

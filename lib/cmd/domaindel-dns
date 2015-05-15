@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ "${PATHINFO}" != "yes" ];
+then
+	echo "Could not find required path information"
+	exit 1
+fi
+
+echo " + Removing pointer to DNS zone configuration file"
+
+# Remove record from BIND9 config
+proceed=`cat /etc/bind/named.conf.automatic | grep ${INFO_SITEROOT} | wc -l`
+if [[ $proceed -gt 0 ]];
+then
+        listing=`cat /etc/bind/named.conf.automatic | grep -v "${INFO_SITEROOT}"`
+        echo "${listing}" > /etc/bind/named.conf.automatic
+fi
+unset proceed
+
+echo " + Restarting the BIND9 service"
+
+# Restart bind service
+service bind9 restart

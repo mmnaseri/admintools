@@ -1,0 +1,93 @@
+#!/bin/bash
+
+# Make sure this is the root user
+if [ $(id -u) -ne 0 ];
+then
+	echo "Insufficient privileges"
+	exit 1
+fi
+
+# Make sure the environment is prepared
+if [ -z "${ADMINTOOLS_HOME}" ];
+then
+	echo "Environment does not point to the admin tools home"
+	exit 2
+fi
+
+# Some commands must be passed in
+if [ ${#*} -eq 0 ];
+then
+	echo "Usage: $0 {command} [arguments ...]"
+	$0 what
+	echo "You can get help for these commands by issuing:"
+	echo "$0 help {command}"
+	exit 3
+fi
+
+# Figure out the command to execute
+declare -a params
+
+for item in $*
+do
+	params[${#params[@]}]=$item
+done
+
+# Setting up parameters and command location
+cmd=${params[0]}
+params=(${params[@]:1})
+executable="${ADMINTOOLS_HOME}/cmd/${cmd}"
+
+# Seeing if the command file exists
+if [ ! -f $executable ];
+then
+	echo "Invalid command ${cmd}: could not find file ${executable}"
+	exit 4
+fi
+
+# Checking if the file is executable
+if [ ! -x $executable ];
+then
+	echo "Invalid command ${cmd}: file is not executable ${executable}"
+	exit 5
+fi
+
+if [ "${PATHINFO}" != "yes" ];
+then
+	export ADMINTOOLS=$0
+	# See if pathinfo has all it needs
+	result=`${ADMINTOOLS_HOME}/bin/pathinfo ${params[@]}`
+	code=$?
+	if [ $code -eq 0 ];
+	then
+		# Get the name of the variables pathinfo will export
+		vars=`${ADMINTOOLS_HOME}/bin/pathinfo ${params[@]} | egrep -o '.*=' | egrep -o '[^=]+'`
+		# Evaluate variables
+		eval $(${ADMINTOOLS_HOME}/bin/pathinfo ${params[@]})
+		# Export PATHINFO
+		for var in $vars
+		do
+			export $var
+		done
+		export PATHINFO=yes
+	fi
+fi
+
+# Execute the command itself
+${executable} ${params[@]}
+
+code=$?
+
+# if it was a help command, we don't care about the exit code
+
+if [ $cmd == "help" ];
+then
+	exit 0
+fi
+
+# Checking that the executable command finished successfully
+if [ $code -ne 0 ];
+then
+	echo "Command failed with status ${code}"
+	exit 6
+fi
+

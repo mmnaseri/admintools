@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if [ "${PATHINFO}" != "yes" ];
+then
+	echo "Could not find required path information"
+	exit 1
+fi
+
+if [ ! -f ${INFO_SITEROOT}/host/host.conf ];
+then
+        echo " + Creating Apache2 virtual host"
+        cat ${ADMINTOOLS_HOME}/template/host/host.conf | ${ADMINTOOLS_HOME}/process-template site ${INFO_BASE} dir ${INFO_SITEROOT} > ${INFO_SITEROOT}/host/host.conf
+else
+        echo " + Apache2 virtual host configuration already in place"
+fi
+
+# Creating a symbolic link
+
+if [[ -f /etc/apache2/sites-available/${INFO_BASE}.conf ]];
+then
+        echo "    - Symbolic link already exists"
+else
+        echo "    - Setting up a symbolic link to the created configuration"
+        ln -s ${INFO_SITEROOT}/host/host.conf /etc/apache2/sites-available/${INFO_BASE}.conf
+fi
+
+echo "    - Enabling the virtual host for ${INFO_BASE}"
+
+# Enable the site
+a2ensite ${INFO_BASE} > /dev/null
+
+# Restart Apache
+
+echo " + Restarting Apache2 web server"
+
+apachectl graceful > /dev/null

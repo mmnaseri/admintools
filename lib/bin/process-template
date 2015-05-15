@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Capture the template content
+content=`cat < /dev/stdin`
+
+# Collecting parameters
+declare -a params
+for item in $*
+do
+	params[${#params[@]}]=$item
+done
+
+# Capturing variable associations
+while [ ${#params[@]} -gt 0 ];
+do
+	var=${params[@]:0:1}
+	params=(${params[@]:1})
+	value=${params[@]:0:1}
+	params=(${params[@]:1})
+	content="${content//::${var}::/${value}}"
+done
+
+echo "${content}"
+

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ "${PATHINFO}" != "yes" ];
+then
+	echo "Could not find required path information"
+	exit 1
+fi
+
+echo " + Disabling the site configuration"
+
+# Removing the Apache2 virtual host configuration
+a2dissite ${INFO_BASE} > /dev/null
+
+echo " + Removing the site from available sites"
+
+# Removing the symbolic link to virtual host configuration
+rm -rf /etc/apache2/sites-available/${INFO_BASE}.conf
+
+echo " + Restarting Apache2 service"
+
+# Restart Apache
+apachectl graceful > /dev/null
