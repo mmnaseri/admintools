@@ -10,6 +10,7 @@ if [ ! -f ${INFO_SITEROOT}/host/host.conf ];
 then
         echo " + Creating Apache2 virtual host"
         cat ${ADMINTOOLS_HOME}/template/host/host.conf | ${ADMINTOOLS_HOME}/process-template site ${INFO_BASE} dir ${INFO_SITEROOT} > ${INFO_SITEROOT}/host/host.conf
+	chown -R ${INFO_USER}:${INFO_USER} ${INFO_SITEROOT}/host/host.conf
 else
         echo " + Apache2 virtual host configuration already in place"
 fi

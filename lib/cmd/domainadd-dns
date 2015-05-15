@@ -13,6 +13,7 @@ then
         echo "    - Zone configuration found. Will not create."
 else
         cat ${ADMINTOOLS_HOME}/template/dns/zone.conf | ${ADMINTOOLS_HOME}/process-template site ${INFO_BASE} ip4 ${INFO_IP4} ip6 ${INFO_IP6} dir ${INFO_SITEROOT} > ${INFO_SITEROOT}/dns/zone.conf
+	chown -R ${INFO_USER}:${INFO_USER} ${INFO_SITEROOT}/dns/zone.conf
 fi
 
 if [ -f ${INFO_SITEROOT}/dns/records.conf ];
@@ -20,6 +21,7 @@ then
         echo "    - DNS records are already in place. Will not override."
 else
         cat ${ADMINTOOLS_HOME}/template/dns/records.conf | ${ADMINTOOLS_HOME}/process-template site ${INFO_BASE} ip4 ${INFO_IP4} ip6 ${INFO_IP6} dir ${INFO_SITEROOT} > ${INFO_SITEROOT}/dns/records.conf
+	chown -R ${INFO_USER}:${INFO_USER} ${INFO_SITEROOT}/dns/records.conf
 fi
 
 # Append record to BIND9 config

@@ -8,20 +8,50 @@ fi
 
 echo " + Setting up the directory structure"
 
-# Removing all previous files
-rm -rf ${INFO_SITEROOT}
+if [ ${INFO_OPTIONS/d} != ${INFO_OPTIONS} ];
+then
+	echo " + Removing existing files"
+	# Removing all previous files
+	rm -rf ${INFO_SITEROOT}
+fi
 
-# Creating document root
-mkdir -p ${INFO_SITEROOT}/public_html
-# Creating DNS configuration folder
-mkdir -p ${INFO_SITEROOT}/dns
-# Creating Apache host configuration folder
-mkdir -p ${INFO_SITEROOT}/host
+if [ ! -d ${INFO_SITEROOT} ];
+then
+	echo " + Creating website root at ${INFO_SITEROOT}"
+	mkdir ${INFO_SITEROOT}
+	chown -R ${INFO_USER}:${INFO_USER} ${INFO_SITEROOT}
+fi
+
+if [ ! -d ${INFO_SITEROOT}/public_html ];
+then
+	echo " + Creating document root ~/public_html"
+	# Creating document root
+	mkdir -p ${INFO_SITEROOT}/public_html
+	chown -R ${INFO_USER}:${INFO_USER} ${INFO_SITEROOT}/public_html
+fi
+
+if [ ! -d ${INFO_SITEROOT}/dns ];
+then
+	echo " + Creating DNS config folder ~/dns"
+	# Creating DNS configuration folder
+	mkdir -p ${INFO_SITEROOT}/dns
+	chown -R ${INFO_USER}:${INFO_USER} ${INFO_SITEROOT}/dns/zone.conf
+fi
+
+if [ ! -d ${INFO_SITEROOT}/host ];
+then
+	echo " + Creating virtual host config folder ~/host"
+	# Creating Apache host configuration folder
+	mkdir -p ${INFO_SITEROOT}/host
+	chown -R ${INFO_USER}:${INFO_USER} ${INFO_SITEROOT}/host
+fi
 
 # Creating a default welcome page
 
 if [ ! -f ${INFO_SITEROOT}/public_html/index.html ];
 then
-        echo "    - Creating a default welcome page"
+        echo "    - Creating a default welcome page at ~/public_html/index.html"
         cat ${ADMINTOOLS_HOME}/template/public_html/index.html | ${ADMINTOOLS_HOME}/process-template site ${INFO_BASE} > ${INFO_SITEROOT}/public_html/index.html
+	chown ${INFO_USER}:${INFO_USER} ${INFO_SITEROOT}/public_html/index.html
 fi
+
