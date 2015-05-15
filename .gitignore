@@ -1,0 +1,2 @@
+# Ignore DB directory which contains usage info
+lib/db/
