@@ -14,6 +14,10 @@ You will need to do one of the following for things to start working:
  1. `sudo . /etc/profile.d/admintools.sh` to populate the environment
  2. log out of your current session and log back in
  3. `export ADMINTOOLS_HOME=/lib/admintools` or wherever it is that you have installed the admin tools
- 
+
+## Uninstalling
+
+ You can also uninstall this toolset by executing `sudo ./uninstall`. This will read the value of `$ADMINTOOLS_HOME`, so you will need to first do one of the steps above after installing, to be able to uninstall the application automatically.
+
 ## Usage
 Everything is pretty self-explanatory and there is help available for most of the stuff. But you can get started by executing `sysadmin` using the super user credentials.
