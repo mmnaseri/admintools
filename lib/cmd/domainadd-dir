@@ -35,7 +35,7 @@ then
 	echo " + Creating DNS config folder ~/dns"
 	# Creating DNS configuration folder
 	mkdir -p ${INFO_SITEROOT}/dns
-	chown -R ${INFO_USER}:${INFO_USER} ${INFO_SITEROOT}/dns/zone.conf
+	chown -R ${INFO_USER}:${INFO_USER} ${INFO_SITEROOT}/dns
 fi
 
 if [ ! -d ${INFO_SITEROOT}/host ];
@@ -51,7 +51,7 @@ fi
 if [ ! -f ${INFO_SITEROOT}/public_html/index.html ];
 then
         echo "    - Creating a default welcome page at ~/public_html/index.html"
-        cat ${ADMINTOOLS_HOME}/template/public_html/index.html | ${ADMINTOOLS_HOME}/process-template site ${INFO_BASE} > ${INFO_SITEROOT}/public_html/index.html
+        cat ${ADMINTOOLS_HOME}/template/public_html/index.html | ${ADMINTOOLS_HOME}/bin/process-template site ${INFO_BASE} > ${INFO_SITEROOT}/public_html/index.html
 	chown ${INFO_USER}:${INFO_USER} ${INFO_SITEROOT}/public_html/index.html
 fi
 
